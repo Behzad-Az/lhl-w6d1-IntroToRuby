@@ -21,7 +21,7 @@ class Q_A
         if currPlayer.score == 0
           p "#{currPlayer.name} is out of the game..."
           @players.delete(currPlayer)
-          @current_round -= 1
+          @current_round = playerIndex - 1
 
           if @players.length == 1
             winner = @players[0]
@@ -39,6 +39,7 @@ class Q_A
 
       end
 
+      # puts "asdasjdhkajsdhkajshdkasjhdkjahsdkjhas"
       @current_round += 1
       startQA
     end
