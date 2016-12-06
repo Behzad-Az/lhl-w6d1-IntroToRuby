@@ -1,44 +1,48 @@
 class Q_A
 
   NUMBERS = [*1..20]
-  PLAYER_COUNT = 2
 
   def startQA
     if @game_ongoing
 
-      playerIndex = @current_round % PLAYER_COUNT
+      playerIndex = @current_round % @players.length
       currPlayer = @players[playerIndex]
 
       question_nums = NUMBERS.sample(2)
       p "#{currPlayer.name}, what is #{question_nums[0]} + #{question_nums[1]}?"
 
-      if gets.chomp.to_i == question_nums[0] + question_nums[1]
+      if STDIN.gets.chomp.to_i == (question_nums[0] + question_nums[1])
         puts "Good job #{currPlayer.name}, Einstein would be proud.... \n \n ----------------- Next Round ----------------------"
 
       else
         currPlayer.lose_score
-        p "#{currPlayer.name}, YOU HAVE FAILED!! Your score is #{currPlayer.score}/3."
+        puts "#{currPlayer.name}, YOU HAVE FAILED!! Your score is #{currPlayer.score}/#{currPlayer.starting_score}. \n \n"
 
         if currPlayer.score == 0
-          playerIndex = (playerIndex + 1) % PLAYER_COUNT
-          winner = @players[playerIndex]
-          puts"
+          p "#{currPlayer.name} is out of the game..."
+          @players.delete(currPlayer)
+          @current_round -= 1
+
+          if @players.length == 1
+            winner = @players[0]
+            puts"
             |*****************************************************************************|
-            |             Game ended, winners is: #{winner.name} with a score of #{winner.score}/3.                 |
+            |             Game ended, winners is: #{winner.name} with a score of #{winner.score}/#{winner.starting_score}.                 |
             |*****************************************************************************|
             "
+            @game_ongoing = false
+          else
+            puts "\n ----------------- Next Round ----------------------"
+          end
 
-          @game_ongoing = false
-        else
-          puts "\n ----------------- Next Round ----------------------"
         end
 
       end
 
       @current_round += 1
-
-      getQuestion
+      startQA
     end
+
   end
 
   def initialize(players)
